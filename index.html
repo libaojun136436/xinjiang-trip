@@ -11,6 +11,16 @@
         body{font-family:"Microsoft YaHei",sans-serif;background:#f0f0f0}
         #map{position:fixed;top:0;right:0;width:calc(100% - 430px);height:100vh}
         .panel{position:fixed;top:0;left:0;width:430px;height:100vh;background:#fff;overflow-y:auto;box-shadow:2px 0 12px rgba(0,0,0,.1);z-index:1000}
+        #mobileToggle{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:2000;
+            background:#e67e22;color:#fff;border:none;padding:10px 24px;border-radius:25px;font-size:14px;font-weight:bold;
+            box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer}
+        @media(max-width:768px){
+            .panel{width:100%;height:55vh;top:45vh;position:fixed;border-top:3px solid #e67e22;box-shadow:0 -4px 12px rgba(0,0,0,.15)}
+            .panel.mobile-hidden{display:none}
+            #map{width:100%;height:45vh;position:fixed;top:0;left:0}
+            #map.mobile-full{height:100vh}
+            #mobileToggle{display:block}
+        }
         .panel-header{background:linear-gradient(135deg,#d35400,#e67e22);color:#fff;padding:14px 18px;position:sticky;top:0;z-index:10}
         .panel-header h1{font-size:16px;margin-bottom:3px}
         .panel-header .sub{font-size:10px;opacity:.85}
@@ -218,6 +228,7 @@
     </div>
 </div>
 <div id="map"></div>
+<button id="mobileToggle" onclick="toggleMobileView()">📋 行程</button>
 <script>
 const DC=['#e74c3c','#e67e22','#f39c12','#d35400','#1abc9c','#2980b9','#8e44ad','#e84393','#636e72'];
 
@@ -861,6 +872,24 @@ function switchRoute(num) {
     // Update legend
     document.getElementById('legendRoad').innerHTML = num===1 ? '━ 独库公路' : '━ 伊昭/独库';
     document.getElementById('legendRoad').style.color = num===1 ? '#8e44ad' : '#d35400';
+}
+
+let mobileShowPanel = true;
+function toggleMobileView(){
+    const panel = document.querySelector('.panel');
+    const mapEl = document.getElementById('map');
+    const btn = document.getElementById('mobileToggle');
+    mobileShowPanel = !mobileShowPanel;
+    if(mobileShowPanel){
+        panel.classList.remove('mobile-hidden');
+        mapEl.classList.remove('mobile-full');
+        btn.innerHTML = '🗺️ 地图';
+    } else {
+        panel.classList.add('mobile-hidden');
+        mapEl.classList.add('mobile-full');
+        btn.innerHTML = '📋 行程';
+    }
+    setTimeout(()=>map.invalidateSize(), 300);
 }
 </script>
 </body>
